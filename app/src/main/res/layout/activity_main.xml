@@ -7,12 +7,4 @@
     android:fitsSystemWindows="true"
     tools:context=".view.NodeActivity">
 
-<TextView
-    android:id="@+id/hello_world_text_view"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    android:text="Hello World"/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
