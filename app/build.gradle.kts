@@ -50,7 +50,6 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    //koin
     implementation(libs.koin.core)
     implementation(libs.koin.android)
 
