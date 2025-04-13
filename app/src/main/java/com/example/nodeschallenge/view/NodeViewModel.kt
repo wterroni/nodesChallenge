@@ -1,5 +1,6 @@
 package com.example.nodeschallenge.view
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nodeschallenge.data.model.LightningNode
@@ -15,16 +16,14 @@ class NodeViewModel(private val repository: NodeRepository) : ViewModel() {
     private val _nodes = MutableStateFlow<List<LightningNode>>(emptyList())
     val nodes: StateFlow<List<LightningNode>> = _nodes
 
-    fun getHelloWord() {
-        viewModelScope.launch {
-            val result = repository.getHelloWord()
-            _data.value = result
-        }
-    }
-
     fun fetchNodes() {
         viewModelScope.launch {
-            _nodes.value = repository.getNodes()
+            try {
+                val result = repository.getNodes()
+                _nodes.value = result
+            } catch (e: Exception) {
+                Log.e("NodeResult", "Erro ao buscar nodes: ${e.message}")
+            }
         }
     }
 }

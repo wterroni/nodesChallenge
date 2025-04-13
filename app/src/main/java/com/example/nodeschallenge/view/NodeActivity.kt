@@ -1,6 +1,7 @@
 package com.example.nodeschallenge.view
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -23,17 +24,19 @@ class NodeActivity : AppCompatActivity() {
 
         collectData()
 
-        viewModel.getHelloWord()
+        viewModel.fetchNodes()
+
     }
 
     private fun collectData() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.data.collect { data ->
-                    binding.helloWorldTextView.text = data
+                viewModel.nodes.collect { nodes ->
+                    nodes.forEach { node ->
+                        Log.d("NodeResult", "Node: $node")
+                    }
                 }
             }
         }
     }
-
 }
