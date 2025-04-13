@@ -50,8 +50,12 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    //
-    implementation("io.insert-koin:koin-core:3.5.0")
-    implementation("io.insert-koin:koin-android:3.5.0")
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+
+    implementation(libs.coroutines.core)
+    implementation(libs.coroutines.android)
+    implementation(libs.lifecycle.viewmodel.ktx)
+
 
 }
