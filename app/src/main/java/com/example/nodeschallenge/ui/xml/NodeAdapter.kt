@@ -1,4 +1,4 @@
-package com.example.nodeschallenge.ui
+package com.example.nodeschallenge.ui.xml
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -9,9 +9,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nodeschallenge.R
 import com.example.nodeschallenge.data.model.LightningNode
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import com.example.nodeschallenge.utils.toBTC
+import com.example.nodeschallenge.utils.toFormattedDate
 
 class NodeAdapter(
     private var nodes: List<LightningNode>
@@ -40,9 +39,9 @@ class NodeAdapter(
         holder.aliasTextView.text = node.alias
         holder.publicKeyTextView.text = node.publicKey
         holder.channelsTextView.text = "${context.getString(R.string.item_node_channels)} ${node.channels}"
-        holder.capacityTextView.text = "${context.getString(R.string.item_node_capacity)} ${formatSatsToBTC(node.capacity)} BTC"
-        holder.firstSeenTextView.text = "${context.getString(R.string.item_node_first_seen)} ${formatUnixTime(node.firstSeen)}"
-        holder.lastUpdatedTextView.text = "${context.getString(R.string.item_node_last_updated)} ${formatUnixTime(node.updatedAt)}"
+        holder.capacityTextView.text = "${context.getString(R.string.item_node_capacity)} ${node.capacity.toBTC()} BTC"
+        holder.firstSeenTextView.text = "${context.getString(R.string.item_node_first_seen)} ${node.firstSeen.toFormattedDate()}"
+        holder.lastUpdatedTextView.text = "${context.getString(R.string.item_node_last_updated)} ${node.updatedAt.toFormattedDate()}"
         holder.locationTextView.text = getLocation(node)
     }
 
@@ -61,16 +60,6 @@ class NodeAdapter(
     }
 
     override fun getItemCount(): Int = nodes.size
-
-    private fun formatSatsToBTC(sats: Long): String {
-        return String.format("%.8f", sats / 100_000_000.0)
-    }
-
-    private fun formatUnixTime(unixTime: Long): String {
-        val date = Date(unixTime * 1000)
-        val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-        return sdf.format(date)
-    }
 
     class NodeDiffCallback(
         private val oldList: List<LightningNode>,
