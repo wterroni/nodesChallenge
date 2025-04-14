@@ -28,4 +28,11 @@ class NodeViewModel(private val repository: NodeRepository) : ViewModel() {
             }
         }
     }
+
+    private val _language = MutableStateFlow(Language.PT_BR)
+    val language: StateFlow<Language> = _language
+
+    fun setLanguage(lang: Language) {
+        _language.value = lang
+    }
 }

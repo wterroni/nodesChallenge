@@ -2,6 +2,7 @@ package com.example.nodeschallenge.ui
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -30,11 +31,21 @@ class NodeActivity : AppCompatActivity() {
         setupSwipeRefresh()
         collectData()
 
+        binding.fabLanguage.setOnClickListener {
+            val options = Language.entries.map { it.label }.toTypedArray()
+            AlertDialog.Builder(this)
+                .setTitle("Escolha o idioma")
+                .setItems(options) { _, index ->
+                    viewModel.setLanguage(Language.values()[index])
+                }
+                .show()
+        }
+
         viewModel.fetchNodes()
     }
 
     private fun setupRecyclerView() {
-        adapter = NodeAdapter(emptyList())
+        adapter = NodeAdapter(emptyList(), viewModel.language.value)
         binding.recyclerViewNodes.layoutManager = LinearLayoutManager(this)
         binding.recyclerViewNodes.adapter = adapter
     }
@@ -48,11 +59,18 @@ class NodeActivity : AppCompatActivity() {
     private fun collectData() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.state.collect { uiState ->
-                    when (uiState) {
-                        is UiState.Loading -> showLoadingState()
-                        is UiState.Success -> showSuccessState(uiState.data)
-                        is UiState.Error -> showErrorState(uiState.message)
+                launch {
+                    viewModel.state.collect { uiState ->
+                        when (uiState) {
+                            is UiState.Loading -> showLoadingState()
+                            is UiState.Success -> showSuccessState(uiState.data)
+                            is UiState.Error -> showErrorState(uiState.message)
+                        }
+                    }
+                }
+                launch {
+                    viewModel.language.collect { lang ->
+                        adapter.updateLanguage(lang)
                     }
                 }
             }

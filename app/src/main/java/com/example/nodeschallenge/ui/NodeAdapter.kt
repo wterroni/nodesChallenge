@@ -9,12 +9,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nodeschallenge.R
 import com.example.nodeschallenge.data.model.LightningNode
+import com.example.nodeschallenge.utils.getText
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 class NodeAdapter(
-    private var nodes: List<LightningNode>
+    private var nodes: List<LightningNode>,
+    private var selectedLanguage: Language
 ) : RecyclerView.Adapter<NodeAdapter.NodeViewHolder>() {
 
     class NodeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -47,16 +49,28 @@ class NodeAdapter(
     }
 
     fun updateData(newNodes: List<LightningNode>) {
-        val diffCallback = NodeDiffCallback(nodes, newNodes)
+        val diffCallback = NodeDiffCallback(
+            oldList = nodes,
+            newList = newNodes,
+            oldLang = selectedLanguage,
+            newLang = selectedLanguage
+        )
         val diffResult = DiffUtil.calculateDiff(diffCallback)
 
         nodes = newNodes
         diffResult.dispatchUpdatesTo(this)
     }
 
+    fun updateLanguage(newLanguage: Language) {
+        val diffCallback = NodeDiffCallback(nodes, nodes, selectedLanguage, newLanguage)
+        selectedLanguage = newLanguage
+        DiffUtil.calculateDiff(diffCallback).dispatchUpdatesTo(this)
+    }
+
     private fun getLocation(node: LightningNode): String {
-        val city = node.city?.ptBR ?: node.city?.en
-        val country = node.country.ptBR ?: node.country.en
+        val langKey = selectedLanguage.key
+        val city = node.city?.getText(langKey)
+        val country = node.country.getText(langKey)
         return "$city, $country"
     }
 
@@ -74,7 +88,9 @@ class NodeAdapter(
 
     class NodeDiffCallback(
         private val oldList: List<LightningNode>,
-        private val newList: List<LightningNode>
+        private val newList: List<LightningNode>,
+        private val oldLang: Language,
+        private val newLang: Language
     ) : DiffUtil.Callback() {
 
         override fun getOldListSize() = oldList.size
@@ -85,7 +101,12 @@ class NodeAdapter(
         }
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return oldList[oldItemPosition] == newList[newItemPosition]
+            val oldNode = oldList[oldItemPosition]
+            val newNode = newList[newItemPosition]
+
+            if (oldLang != newLang) return false
+
+            return oldNode == newNode
         }
     }
 }
