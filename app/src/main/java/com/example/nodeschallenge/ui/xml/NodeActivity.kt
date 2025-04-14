@@ -1,4 +1,4 @@
-package com.example.nodeschallenge.ui
+package com.example.nodeschallenge.ui.xml
 
 import android.os.Bundle
 import android.view.View
@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.nodeschallenge.R
 import com.example.nodeschallenge.data.model.LightningNode
 import com.example.nodeschallenge.databinding.ActivityNodeBinding
+import com.example.nodeschallenge.ui.NodeViewModel
 import com.example.nodeschallenge.ui.state.UiState
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel

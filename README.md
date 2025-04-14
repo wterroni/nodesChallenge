@@ -1,6 +1,6 @@
 ## Build tools & versions used
 - **Android Studio**: Android Studio Giraffe | 2024.2.2 (Ladybug)
-- **Kotlin**: 1.9.24
+- **Kotlin**: 1.9.23
 - **Gradle Plugin**: 8.8.0
 - **Min SDK**: 26
 - **Target SDK**: 34
