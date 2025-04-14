@@ -1,6 +1,5 @@
 package com.example.nodeschallenge.ui
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nodeschallenge.data.model.LightningNode
@@ -24,7 +23,6 @@ class NodeViewModel(private val repository: NodeRepository) : ViewModel() {
                 _state.value = UiState.Success(result)
             } catch (e: Exception) {
                 _state.value = UiState.Error(e.message)
-                Log.e("NodeResult", "Erro ao buscar nodes: ${e.message}")
             }
         }
     }
