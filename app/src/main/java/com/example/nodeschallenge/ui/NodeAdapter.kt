@@ -55,8 +55,8 @@ class NodeAdapter(
     }
 
     private fun getLocation(node: LightningNode): String {
-        val city = node.city?.ptBR ?: node.city?.en
-        val country = node.country.ptBR ?: node.country.en
+        val city = node.city?.ptBR ?: node.city?.en ?: ""
+        val country = node.country?.ptBR ?: node.country?.en ?: ""
         return "$city, $country"
     }
 

@@ -8,5 +8,5 @@ data class LightningNode(
     val firstSeen: Long,
     val updatedAt: Long,
     val city: LocalizedText? = null,
-    val country: LocalizedText
+    val country: LocalizedText?
 )
