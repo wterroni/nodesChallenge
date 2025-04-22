@@ -30,8 +30,19 @@ class NodeActivity : AppCompatActivity() {
         setupRecyclerView()
         setupSwipeRefresh()
         collectData()
+        setupCheckboxListener()
 
         viewModel.fetchNodes()
+    }
+
+    private fun setupCheckboxListener() {
+        binding.checkBoxNodes.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                showSuccessState(viewModel.orderByCapacity())
+            } else {
+                showSuccessState(viewModel.orderByChannels())
+            }
+        }
     }
 
     private fun setupRecyclerView() {

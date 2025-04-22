@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nodeschallenge.R
 import com.example.nodeschallenge.data.model.LightningNode
@@ -46,11 +45,9 @@ class NodeAdapter(
     }
 
     fun updateData(newNodes: List<LightningNode>) {
-        val diffCallback = NodeDiffCallback(nodes, newNodes)
-        val diffResult = DiffUtil.calculateDiff(diffCallback)
-
         nodes = newNodes
-        diffResult.dispatchUpdatesTo(this)
+
+        notifyDataSetChanged()
     }
 
     private fun getLocation(node: LightningNode): String {
@@ -61,20 +58,4 @@ class NodeAdapter(
 
     override fun getItemCount(): Int = nodes.size
 
-    class NodeDiffCallback(
-        private val oldList: List<LightningNode>,
-        private val newList: List<LightningNode>
-    ) : DiffUtil.Callback() {
-
-        override fun getOldListSize() = oldList.size
-        override fun getNewListSize() = newList.size
-
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return oldList[oldItemPosition].publicKey == newList[newItemPosition].publicKey
-        }
-
-        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return oldList[oldItemPosition] == newList[newItemPosition]
-        }
-    }
 }
