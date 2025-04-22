@@ -7,26 +7,50 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.nodeschallenge.R
 import com.example.nodeschallenge.data.model.LightningNode
+import com.example.nodeschallenge.ui.NodeViewModel
 import com.example.nodeschallenge.ui.state.UiState
 import com.example.nodeschallenge.utils.toBTC
 import com.example.nodeschallenge.utils.toFormattedDate
 import kotlinx.coroutines.flow.StateFlow
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun NodeScreen(
     stateFlow: StateFlow<UiState<List<LightningNode>>>,
     onRefresh: () -> Unit
 ) {
+    val viewModel: NodeViewModel = koinViewModel()
     val state by stateFlow.collectAsStateWithLifecycle()
+    val isCapacityChecked by viewModel.sortByCapacity.collectAsState()
+    val sortedNodes by viewModel.sortedList.collectAsState()
 
-    when (state) {
-        is UiState.Loading -> LoadingView()
-        is UiState.Success -> NodeList((state as UiState.Success<List<LightningNode>>).data)
-        is UiState.Error -> ErrorView((state as UiState.Error).message, onRefresh)
+    Column(modifier = Modifier.fillMaxSize()) {
+        if (state is UiState.Success) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Checkbox(
+                    checked = isCapacityChecked,
+                    onCheckedChange = { viewModel.setSortByCapacity(it) }
+                )
+                Text(text = stringResource(R.string.activity_node_checkbox))
+            }
+        }
+
+        when (state) {
+            is UiState.Loading -> LoadingView()
+            is UiState.Error -> ErrorView((state as UiState.Error).message, onRefresh)
+            is UiState.Success -> NodeList(sortedNodes)
+        }
     }
 }
 
